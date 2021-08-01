@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: udagram-frontend
+        image: kikic/udagram-frontend
+        ports:
+        - containerPort: 5432   
+        env:
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: env-secret.yaml
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: env-secret.yaml
+              key: password  
+        - name: POSTGRES_DB
+          value: postgres
+        - name: POSTGRES_HOST
+          value: cdr2.cztskm8s0ipi.us-east-1.rds.amazonaws.com
+        - name: AWS_BUCKET
+          value: test-129309386521-dev
+        - name: AWS_REGION
+          value: us-east-1
+        - name: AWS_PROFILE
+          value: default
+        - name: JWT_SECRET
+          value: hello
+        - name: URL
+          value: http://localhost:8100 
